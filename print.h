@@ -241,9 +241,9 @@ int print(const A&... a)
 {
   MultiplePrinter printer(sizeof...(A));
   
-	int r = printer.print(a...);
-	r += printf("\n");
-	return r;
+  int r = printer.print(a...);
+  r += printf("\n");
+  return r;
 }
 
 }
