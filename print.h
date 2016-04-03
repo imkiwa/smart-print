@@ -99,6 +99,19 @@ struct ValuePrinter<T*>
  * 对 int64/uint64 的格式化字符串不同
  * 所以需要单独提出来用通用的方法打印
  */
+template <typename T, typename F, typename I>
+static inline int printBigInt(I n)
+{
+  int r = 0;
+  if (n >= 10) {
+    r += printBigInt<T, F, I>(n / 10);
+  }
+  
+  r += printf(F::value(), T(n % 10));
+  return r;
+}
+
+
 template <>
 struct ValuePrinter<int64_t>
 {
@@ -110,13 +123,7 @@ struct ValuePrinter<int64_t>
   
   static inline int print(int64_t n)
   {
-    int r = 0;
-    if (n >= 10) {
-      r += print(n / 10);
-    }
-    
-    r += printf(format(), int32_t(n % 10));
-    return r;
+    return printBigInt<int64_t, F, int32_t>(n);
   }
 };
 
@@ -131,13 +138,7 @@ struct ValuePrinter<uint64_t>
   
   static inline int print(uint64_t n)
   {
-    int r = 0;
-    if (n >= 10) {
-      r += print(n / 10);
-    }
-    
-    r += printf(format(), uint32_t(n % 10));
-    return r;
+    return printBigInt<uint64_t, F, uint32_t>(n);
   }
 };
 
